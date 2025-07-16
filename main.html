@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calculator</title>
+    <style>
+        /* CSS for styling the calculator */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .calculator {
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            background-color: #0c0c0c;
+        }
+
+        #display {
+            width: 100%;
+            height: 50px;
+            font-size: 24px;
+            text-align: right;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 columns */
+            gap: 10px; /* Space between buttons */
+        }
+
+        button {
+            padding: 20px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #e9e9e9;
+        }
+        
+        button:hover {
+            background-color: #dcdcdc;
+        }
+
+        .operator {
+            background-color: #f0ad4e;
+            color: white;
+        }
+
+        .operator:hover {
+            background-color: #ec971f;
+        }
+
+        .clear {
+            background-color: #d9534f;
+            color: white;
+            grid-column: span 2; /* Make the Clear button wider */
+        }
+
+        .clear:hover {
+            background-color: #c9302c;
+        }
+
+        .equals {
+            background-color: #5cb85c;
+            color: white;
+            grid-column: span 2; /* Make the Equals button wider */
+        }
+
+        .equals:hover {
+            background-color: #4cae4c;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- HTML for the calculator UI -->
+    <div class="calculator">
+        <input type="text" id="display" readonly> <!-- 'readonly' prevents typing -->
+        <div class="buttons">
+            <!-- Row 1 -->
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button class="operator" onclick="appendToDisplay('/')">/</button>
+            <!-- Row 2 -->
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button class="operator" onclick="appendToDisplay('*')">x</button>
+            <!-- Row 3 -->
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button class="operator" onclick="appendToDisplay('-')">-</button>
+            <!-- Row 4 -->
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button class="operator" onclick="appendToDisplay('+')">+</button>
+            <!-- Bottom Row -->
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button class="equals" onclick="calculateResult()">=</button>
+        </div>
+    </div>
+
+    <!-- JavaScript for the calculator logic -->
+    <script>
+        const display = document.getElementById('display');
+
+        // Function to add characters to the display
+        function appendToDisplay(value) {
+            // We use the 'x' for the multiply button, but need '*' for the calculation
+            if (value === 'x') {
+                value = '*';
+            }
+            display.value += value;
+        }
+
+        // Function to clear the display
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        // This is our main math function to handle the calculation
+        function calculate(num1, operator, num2) {
+            // Use a switch statement to decide which operation to perform
+            switch (operator) {
+                case '+':
+                    return num1 + num2;
+                case '-':
+                    return num1 - num2;
+                case '*':
+                    return num1 * num2;
+                case '/':
+                    return num1 / num2;
+                default:
+                    return 'Error'; // Should not happen with our simple setup
+            }
+        }
+        
+        // Function to get the expression from the UI and compute the result
+        function calculateResult() {
+            const expression = display.value;
+            
+            // Find the operator (+, -, *, /) in the expression
+            // This is a simple way to find the first operator
+            const operatorMatch = expression.match(/[\+\-\*\/]/);
+            
+            // If no operator is found, do nothing
+            if (!operatorMatch) return;
+            
+            const operator = operatorMatch[0]; // The operator itself (e.g., '+')
+            const parts = expression.split(operator); // Split "5+3" into ["5", "3"]
+            
+            const num1 = parseFloat(parts[0]); // The first number
+            const num2 = parseFloat(parts[1]); // The second number
+            
+            // Call our math function and get the result
+            const result = calculate(num1, operator, num2);
+            
+            // Display the result
+            display.value = result;
+        }
+    </script>
+
+</body>
+</html>
